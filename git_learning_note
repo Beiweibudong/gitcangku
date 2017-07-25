@@ -1,0 +1,29 @@
+git 学习笔记
+1.git config --global user.name "your name" #设置仓库名称
+2.git config --global user.email "user.email" #设置仓库邮件地址
+3.git init # 创建仓库
+4.git add fileName#将文件添加到仓库
+5.git commit -m"文件描述"#将文件提交到仓库
+6.git status #查看仓库状态
+7.git diff fileName#查看文件中被修改的内容
+8.git log # 查看历史提交日志
+
+*************************
+版本回退
+*************************
+9.HEAD表示当前版本，HEAD^表示上一版本，HEAD^^表示上上一版本，前n版本是HEAD~n
+10.git reset --hard HEAD #会退到上一版本
+11.git reset --hard commit-id #回到commit-id指向的版本
+12.git reflog #查看所有发生的操作命令
+13.git diff HEAD -- fileName #查看工作区和版本库里最新版本区别
+14.git checkout -- fileName #a.撤回修改到最近一次 commit 或 add 状态  b.恢复在工作区误杀的文件
+15.git reset HEAD fileName #将放在暂存区的修改撤销到工作区
+16.git rm fileName #删除版本库中的文件
+
+
+***********************
+远程库操作
+***********************
+17.git remote add origin ssh #origin默认远程库，ssh为github库地址，用于将本地库与远程库关联
+18.git push -u origin master #将本地库推送到远程库,首次使用用于关联master  下次不用-u
+19.
