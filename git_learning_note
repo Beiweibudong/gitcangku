@@ -26,7 +26,10 @@ git 学习笔记
 ***********************
 17.git remote add origin ssh #origin默认远程库，ssh为github库地址，用于将本地库与远程库关联
 18.git push -u origin master #将本地库推送到远程库,首次使用用于关联master  下次不用-u
-
+a1.git remote (-v)#查看远程库(详细)信息
+a2.git branch --set-upstream branch-name origin/branch-name #关联本地与远程分支
+a3.git pull #获取远程的新提交
+a4.git clone url #克隆远程库到本地,url为远程库ssh
 
 
 ***********************
@@ -38,4 +41,11 @@ git 学习笔记
 20.git branch #显示当前分支
 21.git merge dev #表示将dev分支合并到当前分支
 22.git branch -d dev #删除dev分支
+	git branch -D dev #强制删除分支
+23.git log --graph #查看分支合并情况
+24.git merge --no-ff -m "描述" dev #禁用fast forward 后合并分支，由于合并后会提交新的commit，因此需要-m，这样提交的可以看到合并历史
+25.git stash #储藏工作现场
+26.git stash pop #恢复工作现场并删除stash
+
+
 
