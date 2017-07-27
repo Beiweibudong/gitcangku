@@ -30,6 +30,7 @@ a1.git remote (-v)#查看远程库(详细)信息
 a2.git branch --set-upstream branch-name origin/branch-name #关联本地与远程分支
 a3.git pull #获取远程的新提交
 a4.git clone url #克隆远程库到本地,url为远程库ssh
+a5.git checkout -b branch-name origin/branch-name #在本地创建和远程分支对应的分支
 
 
 ***********************
@@ -48,4 +49,18 @@ a4.git clone url #克隆远程库到本地,url为远程库ssh
 26.git stash pop #恢复工作现场并删除stash
 
 
+**************************
+标签管理
+**************************
+27.git tag <name> #用于新建一个标签，默认为HEAD，也可以指定一个commit id；
+28.git tag -a <tagname> -m "blablabla..." #可以指定标签信息；
+29.git show <tagname> #查看tag信息
+30.git tag #查看所有tag信息
+31.git push origin <tagname> #可以推送一个本地标签；
+32.git push origin --tags #可以推送全部未推送过的本地标签；
+33.git tag -d <tagname> #可以删除一个本地标签；
+34.git push origin :refs/tags/<tagname> #可以删除一个远程标签
 
+*************************
+**********************剧终***************************
+*************************
