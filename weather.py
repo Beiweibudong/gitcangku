@@ -49,7 +49,7 @@ def get_block_date(block):
 		return "无数据"
 
 def get_block_air(block):
-	reg=r'p class="wea" title="(.+?)".+?'
+	reg=r'<p title=".+?" class="wea">(.+?)</p>'
 	get_list = re.findall(reg,block)
 	if len(get_list)>0:
 		return get_list[0]
@@ -57,7 +57,7 @@ def get_block_air(block):
 		return "无数据"
 
 def get_block_day_tmp(block):
-	reg=r'<span>([0-9]+).+?</span>'
+	reg=r'<span>([0-9]+)</span>'
 	get_list = re.findall(reg,block)
 	if len(get_list)>0:
 		return get_list[0]
@@ -73,8 +73,9 @@ def get_block_night_tmp(block):
 		return "无数据"
 
 def get_block_wind(block):
-	reg=r'<i>([^0-9]+)</i>'
+	reg=r'<i>([0-9]\-.+?)</i>'
 	get_list = re.findall(reg,block)
+	#print(len(get_list))
 	if len(get_list)>0:
 		return get_list[0]
 	else:
@@ -82,6 +83,7 @@ def get_block_wind(block):
 
 html = getHtml("http://www.weather.com.cn/weather/101170101.shtml")
 block=get_block(html)
+#print(block)
 
 print("所在城市:"+get_city(html))
 print("查询日期:"+get_block_date(block))
