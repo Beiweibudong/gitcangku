@@ -35,5 +35,7 @@ git 学习笔记
 19.git checkout -b dev  #表示创建并切换到dev分支
 	--git branch dev  #创建dev分支
 	--git checkout dev #切换到dev分支
-20.git branch #显示当前branch
-21.
+20.git branch #显示当前分支
+21.git merge dev #表示将dev分支合并到当前分支
+22.git branch -d dev #删除dev分支
+
