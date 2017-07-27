@@ -16,7 +16,7 @@ git 学习笔记
 11.git reset --hard commit-id #回到commit-id指向的版本
 12.git reflog #查看所有发生的操作命令
 13.git diff HEAD -- fileName #查看工作区和版本库里最新版本区别
-14.git checkout -- fileName #a.撤回修改到最近一次 commit 或 add 状态  b.恢复在工作区误杀的文件
+14.git checkout -- fileName #a.撤回修改到最近一次 commit 或 add 状态  b.恢复在工作区误删的文件
 15.git reset HEAD fileName #将放在暂存区的修改撤销到工作区
 16.git rm fileName #删除版本库中的文件
 
@@ -26,4 +26,14 @@ git 学习笔记
 ***********************
 17.git remote add origin ssh #origin默认远程库，ssh为github库地址，用于将本地库与远程库关联
 18.git push -u origin master #将本地库推送到远程库,首次使用用于关联master  下次不用-u
-19.
+
+
+
+***********************
+分支与合并
+***********************
+19.git checkout -b dev  #表示创建并切换到dev分支
+	--git branch dev  #创建dev分支
+	--git checkout dev #切换到dev分支
+20.git branch #显示当前分支
+21.
