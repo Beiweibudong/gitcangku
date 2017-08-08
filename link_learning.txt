@@ -1,0 +1,21 @@
+
+http://10.31.57.148:8081/sgss
+guest/888888
+
+
+服务监控
+http://10.20.288.72:3000
+guest/guest
+
+服务运行数据查询
+http://10.21.35.210:7002/esbOperation
+
+https://10.31.78.205:7700
+guest@e-chinalife.com   Clic1234
+
+
+云消息测试环境
+https://10.31.57.173:8700/login
+
+开发者中心
+http://dev.clic/
