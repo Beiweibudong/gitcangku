@@ -1,0 +1,29 @@
+json 是一个模块，用于将python 数据转换为 json 格式
+python数据序列化为json数据方法：json.dumps()和json.dump()
+json.dumps() 返回一个str,内容是标准的JSON
+	import json
+	d = dict (name = 'bob', age = 20, score =88)
+	json.dumps(d)
+json.dump()是直接将JSON写入到一个file-like object
+default
+反序列化方法：json.loads()和json.load()
+json.loads()将JSON字符串反序列化
+json.load()从file-like object中读取字符串并反序列化。
+object_hook
+pickle 是一个用来序列化的模块
+序列化：
+pickle.dumps() : 将对象序列化为bytes
+pickle.dump() ： 将对象序列化后存入file-like object
+反序列化：
+pickle.loads() ：对bytes反序列化
+pickle.load() ： 从file-like object中直接反序列化出对象
+
+
+进程，线程，协程
+yield
+yield from
+
+
+
+
+
