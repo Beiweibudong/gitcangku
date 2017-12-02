@@ -50,12 +50,3 @@ if __name__ == '__main__':
 	check_bit = checkBit(mod)
 	print('身份证号为: %s 的校验码为 :%s' % (id_num,check_bit))
 
-'''
-接下来的内容属于测试部分
-用于测试并练习git操作
-'''
-
-'''
-测试内容2部分
-冯诺依曼很厉害
-'''
