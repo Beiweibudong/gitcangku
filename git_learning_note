@@ -31,6 +31,7 @@ a2.git branch --set-upstream branch-name origin/branch-name #关联本地与远�
 a3.git pull #获取远程的新提交
 a4.git clone url #克隆远程库到本地,url为远程库ssh
 a5.git checkout -b branch-name origin/branch-name #在本地创建和远程分支对应的分支
+a6.git pull --rebase origin master #将远程的和本地仓库代码合并
 
 
 ***********************
