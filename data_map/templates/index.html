@@ -1,0 +1,206 @@
+
+<!DOCTYPE html>
+<html>
+  <head >
+		<title>Hyperspace by HTML5 UP</title>
+  		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		
+		<script type="text/javascript" src="../static/echarts.js"></script>
+		<script type="text/javascript" src="../static/jquery.js"></script>
+		<script type="text/javascript" src="../static/china-main-city-map.js" charset="utf-8"></script>
+		<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
+		<link rel="stylesheet" href="../static/assets/css/main.css" />
+		<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
+		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
+  </head>
+  
+  <body>
+		<header id="header">
+				<a href="index.html" class="title">中国人寿宁夏分公司</a>
+				
+		</header>
+				
+ <div id= "main" style="width:1350px;height:700px;">
+ 
+ <script type="text/javascript">
+ 
+var myChart = echarts.init(document.getElementById('main'));
+//存储切换的每一级地图信息
+var mapStack = [];
+var timeFn = null;
+var curMap = {};
+//初始化地图
+loadMap('640000', '宁夏');
+/**
+   绑定用户切换地图区域事件
+   cityMap对象存储着地图区域名称和区域的信息(name-code)
+   当mapCode有值,说明可以切换到下级地图
+   同时保存上级地图的编号和名称  
+*/
+myChart.on('mapselectchanged', function(params) {
+    clearTimeout(timeFn);
+	//由于单击事件和双击事件冲突，故单击的响应事件延迟250毫秒执行
+	timeFn = setTimeout(function(){
+	    var name = params.batch[0].name;
+		var mapCode = cityMap[name];
+		if (!mapCode) {
+			alert('无此区域地图显示');
+			return;
+		}
+		loadMap(mapCode, name);	
+		//将上一级地图信息压入mapStack
+		mapStack.push({
+			mapCode: curMap.mapCode,
+			mapName: curMap.mapName
+		});	
+	}, 250);   
+});
+/**
+   绑定双击事件，并加载上一级地图
+*/
+myChart.on('dblclick', function(params) {
+    //当双击事件发生时，清除单击事件，仅响应双击事件
+    clearTimeout(timeFn);
+    var map = mapStack.pop();
+	if (!mapStack.length && !map) {
+	    alert('已经到达最上一级地图了');
+		return;
+	}
+	loadMap(map.mapCode, map.mapName);
+});
+/**
+   加载地图：根据地图所在省市的行政编号，
+   获取对应的json地图数据，然后向echarts注册该区域的地图
+   最后加载地图信息
+   @params {String} mapCode:地图行政编号,for example['中国':'100000', '湖南': '430000']
+   @params {String} mapName: 地图名称
+*/
+function loadMap(mapCode, mapName) {
+    $.getJSON('../static/china-main-city/' + mapCode + '.json', function (geoJson) {
+	     if (geoJson) {
+			 $.post('/').done(function(date){
+			 debugger
+				 date = JSON.parse(date);
+
+				 console.log(date)
+		     echarts.registerMap(mapName, geoJson);
+			 var option = {
+			 	title: {
+            		text: '中国人寿宁夏分公司区域保费数据展示',
+            		subtext: '数据来自XXOS',
+            		left: 'center',
+            		sublink: 'http://zh.wikipedia.org/wiki/%E9%A6%99%E6%B8%AF%E8%A1%8C%E6%94%BF%E5%8D%80%E5%8A%83#cite_note-12',
+            		textStyle: {
+                		color: '#7bbfea'
+            		},
+        		},
+				tooltip: {
+					trigger: 'item',
+					formatter: '{b}<br/>保费：{c}元'
+				},
+				//用于展示不同区域数据分布情况
+				visualMap: {
+        			min: 0,
+        			max: 50000,
+        			left: 'left',
+       				top: 'bottom',
+       			 	text:['高','低'],           // 文本，默认为数值文本
+        			calculable : true,
+        			inRange: {
+                		color: ['lightskyblue','yellow', 'orangered']
+            		}
+    			},
+    			//用于保存的侧边插件
+    			toolbox: {
+        			show: true,
+        			orient : 'vertical',
+        			left: 'right',
+        			top: 'center',
+        			feature : {
+            			mark : {show: true},
+            			dataView : {show: true, readOnly: false},
+            			restore : {show: true},
+            			saveAsImage : {show: true}
+        				}
+    				},
+				series: [
+					{
+						name: '宁夏回族自治区数据展示',
+						type: 'map',
+						mapType: mapName,
+						selectedMode : 'multiple',
+						label: {
+							normal: {
+								show: true
+							},
+							emphasis: {
+								show: true
+							}
+						},
+						data:date
+						/**
+						[
+							
+							//宁夏各市数据
+							{name: '石嘴山市', value: data[0]},
+		                    {name: '银川市', value: data[1]},
+		                    {name: '吴忠市', value: data[2]},
+		                    {name: '中卫市', value: data[3]},
+		                    {name: '固原市', value: data[4]},
+		                    //石嘴山市数据
+		                    {name: '大武口区', value: data[5]},
+		                    {name: '惠农区', value: data[6]},
+		                    {name: '平罗县', value: data[7]},
+		                 	//银川市数据
+		                    {name: '贺兰县', value: data[8]},
+		                    {name: '西夏区', value: data[10]},
+		                    {name: '金凤区', value: data[11]},
+		                 	{name: '兴庆区', value: data[12]},
+		                    {name: '永宁县', value: data[13]},
+		                    {name: '灵武市', value: data[14]},
+		                    //吴忠市数据
+		                    {name: '青铜峡市', value: data[15]},
+		                    {name: '利通区', value: data[16]},
+		                    {name: '盐池县', value: 31686},
+		                 	{name: '红寺堡区', value: 6992},
+		                    {name: '同心县', value: 44045},
+		                    //中卫市数据
+		                    {name: '沙坡头区', value: 10000},
+		                    {name: '中宁县', value: 15477},
+		                    {name: '海原县', value: 31686},
+		                    //固原市数据
+		                    {name: '西吉县', value: 10000},
+		                    {name: '原州区', value: 15477},
+		                    {name: '彭阳县', value: 31686},
+		                 	{name: '隆德县', value: 6992},
+		                    {name: '泾源县', value: 44045},
+						]
+						*/
+					},
+					
+				]
+			 };
+			 myChart.setOption(option);
+			 curMap = {
+				mapCode: mapCode,
+				mapName: mapName
+			 }
+			 });		
+		 } else {
+             alert('无法加载该地图');
+		 }		 
+	});
+}
+ </script>
+  </div>   
+  <!-- Footer -->
+  <footer id="footer" class="wrapper style1-alt">
+		<div class="inner">
+			<ul class="menu">
+				<li> Copyright &copy; 2017 by mx. All rights reserved.</li>
+			</ul>
+		</div>
+	</footer>
+  </body>
+</html>

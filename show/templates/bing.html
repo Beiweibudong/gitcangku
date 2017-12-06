@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>实时web监控系统</title>
+    <link rel="stylesheet" href="../static/materialize.min.css"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="../static/jquery.min.js"></script>
+    <script src="../static/materialize.min.js"></script>
+    <script src="../static/echarts.min.js"></script>
+</head>
+<body>
+<!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+<!--<div class="container">-->
+<!--<div class="col">-->
+
+<ul class="collapsible popout" data-collapsible="accordion">
+    <li id="CPU">
+        <div class="collapsible-header active">一&CPU占比</div>
+        <div class="collapsible-body">
+            <div id="main" name="find" style="width: 1300px;height:600px;left: 100px;top: 50px;"></div>
+        </div>
+    </li>
+    <li id="虚拟内存">
+        <div class="collapsible-header">二&虚拟内存占比</div>
+        <div class="collapsible-body">
+            <div id="main2" name="find" style="width: 1300px;height:600px;left: 100px;top: 50px;"></div>
+        </div>
+    </li>
+    <li id="实际内存">
+        <div class="collapsible-header">三&实际内存占比</div>
+        <div class="collapsible-body">
+            <div id="main3" name="find" style="width: 1300px;height:600px;left: 100px;top: 50px;"></div>
+        </div>
+    </li>
+</ul>
+
+
+<div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
+    <a class="btn-floating btn-large red">
+        <i class="large mdi-editor-mode-edit"></i>
+    </a>
+    <ul>
+        <li><a onclick="href='/list'" class="btn-floating yellow  tooltipped" data-position="left" data-delay="5"
+               data-tooltip="列表"><i class="material-icons">list</i></a></li>
+        <li><a onclick="href='/'" class="btn-floating green tooltipped" data-position="left" data-delay="5"
+               data-tooltip="折/柱状图"><i class="material-icons">equalizer</i></a></li>
+        <li><a onclick="href=href" class="btn-floating blue btn-medium tooltipped" data-position="left" data-delay="5"
+               data-tooltip="饼图"><i class="material-icons">av_timer</i></a></li>
+    </ul>
+</div>
+<input type="hidden" id="nametest" value="CPU">
+<input type="hidden" id="maintest" value="main">
+<!--</div></div>-->
+<script type="text/javascript">
+    $(function () {
+        $(".collapsible li").click(function () {
+            debugger
+            $("#nametest").val(this.id)
+            $("#maintest").val($(this).find("div[name='find']").attr("id"))
+        })
+
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('main'));
+        var old = $("#maintest").val()
+        myChart.showLoading();
+        // 异步加载数据
+        setInterval(function () {
+            $.post('/bing').done(function (date) {
+                date = JSON.parse(date);
+                myChart.hideLoading();
+                if (old != $("#maintest").val()) {
+                    myChart = echarts.init(document.getElementById($("#maintest").val()));
+                    old = $("#maintest").val()
+                }
+                var option = {
+                    title: {
+                        text: $("#nametest").val() + "占比",
+                        subtext: '实时获取',
+                        fontSize: 18,
+                        x: 'center'
+                    },
+                    tooltip: {
+                        trigger: 'item',
+                        formatter: "{a} <br/>{b} : {c} ({d}%)"
+                    },
+                    toolbox: {
+                        show: true,
+                        feature: {
+                            mark: {show: true},
+                            dataView: {show: true, readOnly: false},
+                            magicType: {
+                                show: true,
+                                type: ['pie', 'funnel']
+                            },
+                            restore: {show: true},
+                            saveAsImage: {show: true}
+                        }
+                    },
+                    calculable: true,
+                    series: [
+                        {
+                            name: '所有' + $("#nametest").val(),
+                            type: 'pie',
+                            radius: 150,
+                            center: ['25%', '50%'],
+                            roseType: 'angle',
+                            itemStyle: {
+                                emphasis: {
+                                    shadowBlur: 10,
+                                    shadowOffsetX: 0,
+                                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                }
+                            },
+                            label: {
+                                normal: {
+                                    show: true
+                                },
+                                emphasis: {
+                                    show: true
+                                }
+                            },
+                            lableLine: {
+                                normal: {
+                                    show: true
+                                },
+                                emphasis: {
+                                    show: true
+                                }
+                            },
+                            data: (function () {
+//                                debugger
+                                var res = [];
+                                var len = date.name.length;
+                                var use = 0;
+                                if ($("#maintest").val() == 'main') {
+                                    while (len--) {
+                                        if (date.cpu[len] != 0 && date.pid[len]!=-1) {
+                                            if (date.pid[len] == 0) {
+                                                res.push({
+                                                    'name': "空闲的" + $("#nametest").val(),
+                                                    'value': date.cpu[len]
+                                                })
+                                            } else {
+                                                use += date.cpu[len]
+                                            }
+                                        }
+                                    }
+                                } else if ($("#maintest").val() == 'main2') {
+                                    while (len--) {
+                                        if (date.vms[len] != 0 ) {
+                                            if (date.pid[len] == -1) {
+                                                res.push({
+                                                    'name': "空闲的" +$("#nametest").val(),
+                                                    'value': date.vms[len]
+                                                })
+                                            } else {
+                                                use += date.vms[len]
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    while (len--) {
+                                        if (date.rss[len] != 0) {
+                                            if (date.pid[len] == -1) {
+                                                res.push({
+                                                    'name': "空闲的"+$("#nametest").val() ,
+                                                    'value': date.rss[len]
+                                                })
+                                            } else {
+                                                use += date.rss[len]
+                                            }
+                                        }
+                                    }
+                                }
+                                res.push({
+                                    'name': '正在使用的' + $("#nametest").val(),
+                                    'value': use
+                                })
+                                return res;
+                            })().sort(function (a, b) {
+                                return a.value - b.value
+                            }),
+
+                        }, {
+                            name: '正在使用的' + $("#nametest").val(),
+                            type: 'pie',
+                            radius: [25, 150],
+                            center: ['75%', '50%'],
+                            data: (function () {
+//                                debugger
+                                var res = [];
+                                var len = date.name.length;
+                                if ($("#maintest").val() == 'main') {
+                                    while (len--) {
+                                        if (date.cpu[len] != 0 && date.pid[len] != 0 &&date.pid[len] != -1) {
+                                            res.push({
+                                                'name': date.name[len],
+                                                'value': date.cpu[len]
+                                            })
+                                        }
+                                    }
+                                } else if ($("#maintest").val() == 'main2') {
+                                    while (len--) {
+                                        if (date.vms[len] != 0 && date.pid[len] != 0&&date.pid[len] != -1) {
+                                            res.push({
+                                                'name': date.name[len],
+                                                'value': date.vms[len]
+                                            })
+                                        }
+                                    }
+                                }
+                                else {
+                                    while (len--) {
+                                        if (date.rss[len] != 0 && date.pid[len] != 0&&date.pid[len] != -1) {
+                                            res.push({
+                                                'name': date.name[len],
+                                                'value': date.rss[len]
+                                            })
+                                        }
+                                    }
+                                }
+                                return res;
+                            })().sort(function (a, b) {
+                                return a.value - b.value
+                            }),
+                            roseType: 'angle',
+                            itemStyle: {
+                                emphasis: {
+                                    shadowBlur: 10,
+                                    shadowOffsetX: 0,
+                                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                }
+                            }
+
+//                            animationType: 'scale',
+//                            animationEasing: 'elasticOut',
+//                            animationDelay: function (idx) {
+//                                return Math.random() * 200;
+//                            }
+                        }
+                    ]
+                };
+                myChart.setOption(option);
+            });
+        }, "2000");
+
+
+    })
+
+</script>
+</body>
+
+
+</html>
