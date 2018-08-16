@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {% for userself in user %}
+        {% include '_content.html' %}
+    {% endfor %}
+    
+{% endblock %}

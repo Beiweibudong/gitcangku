@@ -1,0 +1,4 @@
+{
+    "vsicons.presets.angular": true,
+    "python.pythonPath": "${workspaceFolder}\\myvenv\\Scripts\\python.exe"
+}

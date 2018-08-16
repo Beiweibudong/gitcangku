@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="content-type" content="txt/html;charset=utf-8" />
+    <title>通讯录管理</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--引入Bootstrap-->
+    <link href="../static/css/bootstrap.css" rel="stylesheet">
+    <link href="../static/css/tongxunlu.css" rel="stylesheet">
+</head>
+
+<body>
+    <!--水平通讯栏-->
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <!--分辨率低时显示的弹出左侧侧边栏按钮-->
+                <div class="pull-left visible-xs">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="offcanvas">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </div>
+                <!--分辨率低时显示横排的菜单按钮-->
+                <a class="navbar-brand" href="/index">通讯录</a>
+            </div>
+            <form action="/search" method="POST" class="navbar-form navbar-right" role="search">
+                <div class="form-group">
+                    <input type="text" name="username" class="form-control" placeholder="请输入姓名">
+                </div>
+                <button type="submit" class="btn btn-info">
+                    <span class="glyphicon glyphicon-search"></span>搜索
+                </button>
+            </form>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="row row-offcanvas row-offcanvas-left">
+            <div class="col-xs-6 col-sm-3 col-md-2 col-lg-2 sidebar-offcanvas" id="siderbar">
+                <div class="list-group">
+                    <a href="#" class="list-group-item">宁夏分公司</a>
+                    <a href="#" class="list-group-item">财险分公司</a>
+                    <a href="#" class="list-group-item">北京研发中心</a>
+                    <a href="#" class="list-group-item">上海数据中心</a>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-9">
+                <div class="row">
+                    {% block content %}{% endblock %}
+                </div>
+            </div>
+            <br>
+            <nav class="text-center">
+                <ul class="pagination">
+                    {% if page_num != 0: %}
+                        {% for page in range(1,page_num+1) %}
+                        <li>
+                            <a href="index?page={{page}}">{{page}}</a>
+                        </li>
+                        {% endfor %}
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+        <hr>
+        <footer class="footer">
+            <p class="text-muted text-center">&copy; 2018 Company, Inc.</p>
+        </footer>
+    </div>
+
+
+    <script src="../static/js/jquery-3.3.1.js"></script>
+    <script src="../static/js/bootstrap.js"></script>
+    <script src="../static/js/index.js"></script>
+</body>
+
+</html>
